@@ -110,6 +110,10 @@ const Game = {
 
     loopCounter: 0,
 
+    powerUp: undefined,
+
+    powerUpCounter: 0,
+
     keys: {
         NORMALATTACK: 'x',
         SPECIALATTACK: 'Space',
@@ -117,7 +121,6 @@ const Game = {
         DOWN: 'ArrowDown',
         LEFT: 'ArrowLeft',
         RIGHT: 'ArrowRight'
-        
     },
 
     init(){
@@ -187,6 +190,10 @@ const Game = {
             this.restorePP(this.pokemonIa)
         }
 
+        if (!this.powerUp && this.loopCounter % 9 === 0 && this.loopCounter > 1000 && this.loopCounter < 1100) {
+            this.powerUp = new PowerUp(this.gameScreen, this.gameSize)
+        }
+
         if (this.pokemonIa.pokemonPosition.top < this.pokemonPlayer.pokemonPosition.top - 15) {
             this.pokemonIa.goDown()
         }
@@ -207,9 +214,25 @@ const Game = {
         if (this.loopCounter % 2 === 0) {
             this.pokemonIa.specialAttack()
         }
+
+        if (this.pokemonPlayer.drunk && this.powerUpCounter <= 300) {
+            this.powerUpCounter++
+        }
+        else if (this.pokemonPlayer.drunk && this.powerUpCounter >= 300) {
+            this.pokemonPlayer.isHangover()
+            this.powerUpCounter = 0
+        }
+        else if (this.pokemonPlayer.hangover && this.powerUpCounter <= 300) {
+            this.powerUpCounter++
+        }
+        else if (this.pokemonPlayer.hangover && this.powerUpCounter >= 300) {
+            this.pokemonPlayer.isNormalFromDrunk()
+            this.powerUpCounter = 0
+        }
         
         this.isCollision()
         this.isOutOfCombat()
+        this.activatePowerUp()
         window.requestAnimationFrame(() => this.gameLoop())
     },
 
@@ -263,7 +286,6 @@ const Game = {
             this.pokemonIa.deleteMts()
             this.pokemonIa.pokemonElement.remove()
             this.iaTeam.shift()
-            console.log("He matado a tu familiar")
             if(this.iaTeam.length > 0){
                 console.log(this.iaTeam[0])
                 this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, 1, this.iaTeam[0].health, this.iaTeam[0].power, this.iaTeam[0].pp)
@@ -298,5 +320,20 @@ const Game = {
 
     restorePP(character) {
         character.pp++
+    },
+
+    activatePowerUp(){
+        if (this.powerUp) {
+            if (
+                this.pokemonPlayer.pokemonPosition.left + this.pokemonPlayer.pokemonSize.width >= this.powerUp.powerUpPosition.left &&
+                this.pokemonPlayer.pokemonPosition.left <= this.powerUp.powerUpPosition.left + this.powerUp.powerUpSize.width &&
+                this.pokemonPlayer.pokemonPosition.top + this.pokemonPlayer.pokemonSize.height >= this.powerUp.powerUpPosition.top &&
+                this.pokemonPlayer.pokemonPosition.top <= this.powerUp.powerUpPosition.top + this.powerUp.powerUpSize.height
+            ) {
+                this.pokemonPlayer.isDrunk()
+                this.powerUp.powerUpElement.remove()
+                this.powerUp = undefined
+            }
+        }
     }
 }

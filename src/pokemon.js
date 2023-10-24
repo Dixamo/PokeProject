@@ -40,9 +40,9 @@ class Pokemon{
     }
 
     recibeDamage(powerEnemie){
-        console.log(this.health)
+        //console.log(this.health)
         this.health -= powerEnemie
-        console.log(this.health)
+        //console.log(this.health)
     }
 
     updatePosition() {
@@ -98,6 +98,9 @@ class Player extends Pokemon {
             specialAttack: false,
             normalAttack: false
         }
+
+        this.drunk = false
+        this.hangover = false
     }
 
     move(){
@@ -166,6 +169,25 @@ class Player extends Pokemon {
             this.mts.push(new specialMT(this.gameScreen, this.pokemonPosition, this.pokemonSize, this.power, this.direction.top, this.direction.left))
             this.pp -= 25
         }
+    }
+    
+    isDrunk() {
+        this.drunk = true
+        this.speed *= 2
+        this.power *= 2
+    }
+
+    isHangover() {
+        this.drunk = false
+        this.hangover = true
+        this.speed /= 4
+        this.power /= 4
+    }
+
+    isNormalFromDrunk() {
+        this.hangover = false
+        this.speed *= 2
+        this.power *= 2
     }
 }
 
