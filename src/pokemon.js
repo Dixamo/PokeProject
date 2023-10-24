@@ -70,6 +70,13 @@ class Pokemon{
             }
         })
     }
+
+    deleteMts() {
+        this.mts.forEach((mt, i) => {
+            mt.mtElement.remove()
+        })
+        this.mts = []
+    }
 }
 
 
@@ -190,7 +197,6 @@ class Enemy extends Pokemon {
         if (this.pokemonPosition.top >= 0) {
             this.direction.top = -20
             this.direction.left = 0
-            console.log(this.direction)
             this.pokemonPosition.top -= this.speed
         }
 
@@ -200,7 +206,6 @@ class Enemy extends Pokemon {
         if (this.pokemonPosition.top <= this.gameSize.height - this.pokemonSize.height) {
             this.direction.top = 20
             this.direction.left = 0
-            console.log(this.direction)
             this.pokemonPosition.top += this.speed
         } 
     }
@@ -209,7 +214,6 @@ class Enemy extends Pokemon {
         if (this.pokemonPosition.left >= 0) {
             this.direction.top = 0
             this.direction.left = -20
-            console.log(this.direction)
             this.pokemonPosition.left -= this.speed
         }
     }
@@ -218,7 +222,6 @@ class Enemy extends Pokemon {
         if (this.pokemonPosition.left <= this.gameSize.width - this.pokemonSize.width) {
             this.direction.top = 0
             this.direction.left = 20
-            console.log(this.direction)
             this.pokemonPosition.left += this.speed
         }
     }

@@ -31,36 +31,80 @@ const Game = {
         },
     ],
 
-    playerIndex: 0,
-
     pokemonPlayer: undefined,
 
     iaTeam: [
         {
             name: 'Alakazam',
-            health: 10,
+            health: 100,
             power: 50,
             pp: 100,
-            sprite: ''
-            
+            sprite: ''            
         },
         {
             name: 'Gyarados',
-            health: 10,
+            health: 100,
             power: 50,
             pp: 100,
             sprite: ''
         },
         {
             name: 'Persian',
-            health: 10,
+            health: 100,
             power: 50,
             pp: 100,
             sprite: ''
         }
     ],
-
-    iaIndex: 0,
+    
+    iaTeam2: [
+        {
+            name: 'Haunter',
+            health: 10,
+            power: 50,
+            pp: 100,
+            sprite: ''
+        },
+        {
+            name: 'Arcanine',
+            health: 10,
+            power: 50,
+            pp: 100,
+            sprite: ''
+        },
+        {
+            name: 'Moltres',
+            health: 10,
+            power: 100,
+            pp: 100,
+            sprite: ''
+        }
+    ], 
+            
+    iaTeam3: [
+        {
+            name: 'Articuno',
+            health: 10,
+            power: 50,
+            pp: 100,
+            sprite: ''
+        },
+        {
+            name: 'Mewtwo',
+            health: 10,
+            power: 0,
+            pp: 100,
+            sprite: ''
+        },
+        {
+            name: 'Mew',
+            health: 10,
+            power: 100,
+            pp: 100,
+            sprite: ''
+        }
+    ],
+    
 
     pokemonIa: undefined,
 
@@ -183,8 +227,8 @@ const Game = {
                 this.pokemonIa.pokemonPosition.top <= elm.mtPosition.top + elm.mtSize.height
             ) {
                 this.pokemonIa.recibeDamage(elm.power)
-                this.pokemonPlayer.mts.splice(i, 1)
                 elm.mtElement.remove()
+                this.pokemonPlayer.mts.splice(i, 1)
             }
         })
         this.pokemonIa.mts.forEach((elm, i) => {
@@ -195,19 +239,19 @@ const Game = {
                 this.pokemonPlayer.pokemonPosition.top <= elm.mtPosition.top + elm.mtSize.height
             ){
                 this.pokemonPlayer.recibeDamage(elm.power)
-                this.pokemonIa.mts.splice(i, 1)
                 elm.mtElement.remove()
+                this.pokemonIa.mts.splice(i, 1)
             }
         })
     },
 
     isOutOfCombat() {
         if(this.pokemonPlayer.health <= 0) {
-            this.pokemonPlayer.clearMts()
+            this.pokemonPlayer.deleteMts()
             this.pokemonPlayer.pokemonElement.remove()
             this.playerTeam.shift()
             if (this.playerTeam.length > 0) {
-                console.log(this.playerTeam[this.playerIndex])
+                console.log(this.playerTeam[0])
                 this.pokemonPlayer = new Player(this.gameScreen, this.gameSize, 10, this.playerTeam[0].health, this.playerTeam[0].power, this.playerTeam[0].pp)
             }
             else {
@@ -216,16 +260,37 @@ const Game = {
         }
 
         if(this.pokemonIa.health <= 0){
-            this.pokemonIa.clearMts()
+            this.pokemonIa.deleteMts()
             this.pokemonIa.pokemonElement.remove()
             this.iaTeam.shift()
+            console.log("He matado a tu familiar")
             if(this.iaTeam.length > 0){
                 console.log(this.iaTeam[0])
-                
-                this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, 5, this.iaTeam[0].health, this.iaTeam[0].power, this.iaTeam[0].pp)
+                this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, 1, this.iaTeam[0].health, this.iaTeam[0].power, this.iaTeam[0].pp)
+                console.log("Te has cargado un familiar del TEAM 1")
             }
             else {
-                alert('ah pos muh bien, quiereh un pin o argo?')
+                this.pokemonIa.deleteMts()
+                this.pokemonIa.pokemonElement.remove()
+                this.iaTeam2.shift()
+                if (this.iaTeam2.length > 0) {
+                    console.log(this.iaTeam2[0])
+                    this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, 3, this.iaTeam2[0].health, this.iaTeam2[0].power, this.iaTeam2[0].pp)
+                    console.log("Te has cargado un familiar del TEam 2")
+                }
+                else{
+                    this.pokemonIa.deleteMts()
+                    this.pokemonIa.pokemonElement.remove()
+                    this.iaTeam3.shift()
+                    if (this.iaTeam3.length > 0) {
+                        console.log(this.iaTeam3[0])
+                        this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, 5, this.iaTeam3[0].health, this.iaTeam3[0].power, this.iaTeam3[0].pp)
+                        console.log("Te has cargado un familiar del teAM 3")
+                    }
+                    else{
+                        alert("Has superado el ultimo modulo")
+                    }
+                }
             }
         }
 
