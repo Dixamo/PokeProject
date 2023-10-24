@@ -1,5 +1,5 @@
 class Pokemon{
-    constructor(gameScreen, gameSize, health, power, speed, pp){
+    constructor(gameScreen, gameSize, speed, health, power, pp){
         this.gameScreen = gameScreen
         this.gameSize = gameSize
         this.health = health
@@ -52,13 +52,11 @@ class Pokemon{
 
     getLastPositionLeft(){
         let lastPositionLeft = this.pokemonElement.style.left
-        let lastPositionTop = this.pokemonElement.style.top
 
         return lastPositionLeft
     }
 
     getLastPositionTop() {
-        
         let lastPositionTop = this.pokemonElement.style.top
 
         return lastPositionTop
@@ -78,8 +76,12 @@ class Pokemon{
 
 class Player extends Pokemon {
 
-    constructor(gameScreen, gameSize, health, power, speed, pp) {
-        super(gameScreen, gameSize, health, power, speed, pp)
+    constructor(gameScreen, gameSize, speed, health, power, pp) {
+        super(gameScreen, gameSize, speed, health, power, pp)
+        this.direction = {
+            top: 0,
+            left: 20
+        }
 
         this.actions = {
             left: false,
@@ -148,7 +150,6 @@ class Player extends Pokemon {
     }
     normalAttack() {
         if (this.actions.normalAttack && this.pp >= 15) {
-            console.log(this.direction)
             this.mts.push(new normalMT(this.gameScreen, this.pokemonPosition, this.pokemonSize, this.power, this.direction.top, this.direction.left))
             this.pp -= 15
         }
@@ -163,8 +164,12 @@ class Player extends Pokemon {
 
 class Enemy extends Pokemon {
 
-    constructor(gameScreen, gameSize, health, power, speed, pp) {
-        super(gameScreen, gameSize, health, power, speed, pp)
+    constructor(gameScreen, gameSize, speed, health, power, pp) {
+        super(gameScreen, gameSize, speed, health, power, pp)
+        this.direction = {
+            top: 0,
+            left: -20
+        }
     }
 
     move(){
@@ -185,6 +190,7 @@ class Enemy extends Pokemon {
         if (this.pokemonPosition.top >= 0) {
             this.direction.top = -20
             this.direction.left = 0
+            console.log(this.direction)
             this.pokemonPosition.top -= this.speed
         }
 
@@ -194,6 +200,7 @@ class Enemy extends Pokemon {
         if (this.pokemonPosition.top <= this.gameSize.height - this.pokemonSize.height) {
             this.direction.top = 20
             this.direction.left = 0
+            console.log(this.direction)
             this.pokemonPosition.top += this.speed
         } 
     }
@@ -201,7 +208,8 @@ class Enemy extends Pokemon {
     goLeft() {
         if (this.pokemonPosition.left >= 0) {
             this.direction.top = 0
-            this.direction.left = 20
+            this.direction.left = -20
+            console.log(this.direction)
             this.pokemonPosition.left -= this.speed
         }
     }
@@ -209,7 +217,8 @@ class Enemy extends Pokemon {
     goRight() {
         if (this.pokemonPosition.left <= this.gameSize.width - this.pokemonSize.width) {
             this.direction.top = 0
-            this.direction.left = -20
+            this.direction.left = 20
+            console.log(this.direction)
             this.pokemonPosition.left += this.speed
         }
     }

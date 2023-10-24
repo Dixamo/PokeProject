@@ -7,7 +7,60 @@ const Game = {
         height: window.innerHeight
     },
 
+    playerTeam: [
+        {
+            name: 'Pikachu',
+            health: 100,
+            power: 20,
+            pp: 100,
+            sprite: ''
+        },
+        {
+            name: 'Charmander',
+            health: 100,
+            power: 20,
+            pp: 100,
+            sprite: ''
+        },
+        {
+            name: 'Dratini',
+            health: 100,
+            power: 20,
+            pp: 100,
+            sprite: ''
+        },
+    ],
+
+    playerIndex: 0,
+
     pokemonPlayer: undefined,
+
+    iaTeam: [
+        {
+            name: 'Alakazam',
+            health: 10,
+            power: 50,
+            pp: 100,
+            sprite: ''
+            
+        },
+        {
+            name: 'Gyarados',
+            health: 10,
+            power: 50,
+            pp: 100,
+            sprite: ''
+        },
+        {
+            name: 'Persian',
+            health: 10,
+            power: 50,
+            pp: 100,
+            sprite: ''
+        }
+    ],
+
+    iaIndex: 0,
 
     pokemonIa: undefined,
 
@@ -24,7 +77,6 @@ const Game = {
     },
 
     init(){
-        console.log('Oigan muyayos ecucharon ese rempalago??', this.gameSize)
         this.setDimensions()
         this.setListener()
         this.start()
@@ -64,31 +116,56 @@ const Game = {
     },
 
     start(){
-        console.log("Diablo señorita")
         this.createElements()
         this.gameLoop()
     },
 
     createElements() {
-        this.pokemonPlayer = new Player(this.gameScreen, this.gameSize, 100, 20, 10, 100)
-        this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, 1000, 20, 10, 100)
+        this.pokemonPlayer = new Player(this.gameScreen, this.gameSize, 10, this.playerTeam[0].health, this.playerTeam[0].power, this.playerTeam[0].pp)
+        this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, 5, this.iaTeam[0].health, this.iaTeam[0].power, this.iaTeam[0].pp) //7 
     },
 
     gameLoop() {
+        if (this.loopCounter > 5500) {
+            this.loopCounter = 0
+        }
+        else {
+            this.loopCounter++
+        }
+
         this.drawAll()
-        this.isOutOfCombat()
         this.loopCounter++
+
         if (this.loopCounter % 2 === 0 && this.pokemonPlayer.pp < 80){
             this.restorePP(this.pokemonPlayer)
         }
         if (this.loopCounter % 5 === 0 && this.pokemonIa.pp < 80) {
             this.restorePP(this.pokemonIa)
         }
-        if (this.loopCounter % 7 === 0 && this.loopCounter % 5 === 0) {
+
+        if (this.pokemonIa.pokemonPosition.top < this.pokemonPlayer.pokemonPosition.top - 15) {
+            this.pokemonIa.goDown()
+        }
+        if (this.pokemonIa.pokemonPosition.top > this.pokemonPlayer.pokemonPosition.top + 15) {
+            this.pokemonIa.goUp()
+        }
+
+        if (this.pokemonIa.pokemonPosition.left < this.pokemonPlayer.pokemonPosition.left - 300) {
+            this.pokemonIa.goRight()
+        }
+        if (this.pokemonIa.pokemonPosition.left > this.pokemonPlayer.pokemonPosition.left + 300) {
+            this.pokemonIa.goLeft()
+        }
+
+        if (this.loopCounter % 5 === 0) {
+            this.pokemonIa.normalAttack()
+        }
+        if (this.loopCounter % 2 === 0) {
             this.pokemonIa.specialAttack()
         }
         
         this.isCollision()
+        this.isOutOfCombat()
         window.requestAnimationFrame(() => this.gameLoop())
     },
 
@@ -126,13 +203,30 @@ const Game = {
 
     isOutOfCombat() {
         if(this.pokemonPlayer.health <= 0) {
-            alert('hahahahahahha perdiste otra vez paquete')
+            this.pokemonPlayer.clearMts()
             this.pokemonPlayer.pokemonElement.remove()
+            this.playerTeam.shift()
+            if (this.playerTeam.length > 0) {
+                console.log(this.playerTeam[this.playerIndex])
+                this.pokemonPlayer = new Player(this.gameScreen, this.gameSize, 10, this.playerTeam[0].health, this.playerTeam[0].power, this.playerTeam[0].pp)
+            }
+            else {
+                alert('hahahahaha eres peor que Ash en la temporada 1')
+            }
         }
 
         if(this.pokemonIa.health <= 0){
-            alert('muh bien, ganaste, quiereh un pin o argo?')
+            this.pokemonIa.clearMts()
             this.pokemonIa.pokemonElement.remove()
+            this.iaTeam.shift()
+            if(this.iaTeam.length > 0){
+                console.log(this.iaTeam[0])
+                
+                this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, 5, this.iaTeam[0].health, this.iaTeam[0].power, this.iaTeam[0].pp)
+            }
+            else {
+                alert('ah pos muh bien, quiereh un pin o argo?')
+            }
         }
 
     },
