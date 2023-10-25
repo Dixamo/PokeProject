@@ -4,6 +4,10 @@
 }
 
 #game-screen {
+    background-image: url(../images/poke-background.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     position: relative;
     overflow: hidden;
     margin: 0;

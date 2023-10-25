@@ -55,15 +55,15 @@ class normalMT extends MT {
 
     init() {
         this.mtElement = document.createElement("div")
-
+    
         this.mtElement.style.position = "absolute"
         this.mtElement.style.borderRadius = "50%"
-        this.mtElement.style.backgroundColor = "red"
+        this.mtElement.style.background = "radial-gradient(rgb(0, 234, 255), rgb(0, 98, 255))"
         this.mtElement.style.top = `${this.mtPosition.top}px`
         this.mtElement.style.left = `${this.mtPosition.left}px`
         this.mtElement.style.width = `${this.mtSize.width}px`
         this.mtElement.style.height = `${this.mtSize.height}px`
-        this.mtElement.style.zIndex = "-1"
+        //this.mtElement.style.zIndex = "-1"
 
         this.gameScreen.appendChild(this.mtElement)
     }
@@ -93,12 +93,12 @@ class specialMT extends MT {
         
         this.mtElement.style.position = "absolute"
         this.mtElement.style.borderRadius = "50%"
-        this.mtElement.style.backgroundColor = "purple"
+        this.mtElement.style.background = "radial-gradient(rgb(66, 44, 187), rgb(255, 0, 119))"
         this.mtElement.style.top = `${this.mtPosition.top}px`
         this.mtElement.style.left = `${this.mtPosition.left}px`
         this.mtElement.style.width = `${this.mtSize.width}px`
         this.mtElement.style.height = `${this.mtSize.height}px`
-        this.mtElement.style.zIndex = "-1"
+        //this.mtElement.style.zIndex = "-1"
 
         this.gameScreen.appendChild(this.mtElement)
 

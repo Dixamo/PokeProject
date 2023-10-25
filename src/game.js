@@ -12,96 +12,124 @@ const Game = {
             name: 'Pikachu',
             health: 100,
             power: 20,
+            speed: 15,
             pp: 100,
-            sprite: ''
+            sprite: '../images/pikachu.png'
         },
         {
-            name: 'Charmander',
+            name: 'Charizard',
             health: 100,
             power: 20,
+            speed: 10,
             pp: 100,
-            sprite: ''
+            sprite: '../images/charizard.png'
         },
         {
-            name: 'Dratini',
+            name: 'Sceptile',
             health: 100,
             power: 20,
+            speed: 12,
             pp: 100,
-            sprite: ''
+            sprite: '../images/sceptile.png'
         },
+        {
+            name: 'Blaziken',
+            health: 100,
+            power: 20,
+            speed: 12,
+            pp: 100,
+            sprite: '../images/blaziken.png'
+        },
+        {
+            name: 'Infernape',
+            health: 100,
+            power: 20,
+            speed: 13,
+            pp: 100,
+            sprite: '../images/infernape.png'
+        }
     ],
 
     pokemonPlayer: undefined,
 
     iaTeam: [
         {
+            name: 'Meowth',
+            health: 100,
+            power: 50,
+            speed: 3,
+            pp: 100,
+            sprite: '../images/meowth.png'
+        },
+        {
             name: 'Alakazam',
             health: 100,
             power: 50,
+            speed: 3,
             pp: 100,
-            sprite: ''            
+            sprite: '../images/alakazam.png'      
         },
         {
-            name: 'Gyarados',
+            name: 'Garchomp',
             health: 100,
             power: 50,
+            speed: 7,
             pp: 100,
-            sprite: ''
-        },
-        {
-            name: 'Persian',
-            health: 100,
-            power: 50,
-            pp: 100,
-            sprite: ''
+            sprite: '../images/garchomp.png'
         }
     ],
     
     iaTeam2: [
         {
-            name: 'Haunter',
-            health: 10,
+            name: 'Milotic',
+            health: 100,
             power: 50,
+            speed: 5,
             pp: 100,
-            sprite: ''
+            sprite: '../images/milotic.png'
         },
         {
-            name: 'Arcanine',
-            health: 10,
+            name: 'Tyranitar',
+            health: 100,
             power: 50,
+            speed: 2,
             pp: 100,
-            sprite: ''
+            sprite: '../images/tyranitar.png'
         },
         {
-            name: 'Moltres',
-            health: 10,
+            name: 'Rayquaza',
+            health: 200,
             power: 100,
+            speed: 8,
             pp: 100,
-            sprite: ''
+            sprite: '../images/rayquaza.png'
         }
     ], 
             
     iaTeam3: [
         {
-            name: 'Articuno',
-            health: 10,
-            power: 50,
-            pp: 100,
-            sprite: ''
-        },
-        {
             name: 'Mewtwo',
-            health: 10,
-            power: 0,
+            health: 200,
+            power: 10,
+            speed: 8,
             pp: 100,
-            sprite: ''
+            sprite: '../images/mewtwo.png'
         },
         {
-            name: 'Mew',
-            health: 10,
-            power: 100,
+            name: 'Dialga',
+            health: 200,
+            power: 50,
+            speed: 8,
             pp: 100,
-            sprite: ''
+            sprite: '../images/dialga.png'
+        },
+        {
+            name: 'Arceus',
+            health: 200,
+            power: 100,
+            speed: 9,
+            pp: 100,
+            sprite: '../images/arceus-normal.png'
         }
     ],
     
@@ -113,6 +141,8 @@ const Game = {
     powerUp: undefined,
 
     powerUpCounter: 0,
+
+    statusBar: undefined,
 
     keys: {
         NORMALATTACK: 'x',
@@ -168,8 +198,10 @@ const Game = {
     },
 
     createElements() {
-        this.pokemonPlayer = new Player(this.gameScreen, this.gameSize, 10, this.playerTeam[0].health, this.playerTeam[0].power, this.playerTeam[0].pp)
-        this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, 5, this.iaTeam[0].health, this.iaTeam[0].power, this.iaTeam[0].pp) //7 
+        this.pokemonPlayer = new Player(this.gameScreen, this.gameSize, this.playerTeam[0].health, this.playerTeam[0].power, this.playerTeam[0].speed, this.playerTeam[0].pp, this.playerTeam[0].sprite)
+        this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, this.iaTeam[0].health, this.iaTeam[0].power, this.iaTeam[0].speed, this.iaTeam[0].pp, this.iaTeam[0].sprite) //7 
+        this.playerStatusBar = new StatusBar(this.gameScreen, this.gameSize, 0, this.pokemonPlayer.health)
+        this.iaStatusBar = new StatusBar(this.gameScreen, this.gameSize, this.gameSize.width - 520, this.pokemonIa.health)
     },
 
     gameLoop() {
@@ -179,14 +211,16 @@ const Game = {
         else {
             this.loopCounter++
         }
+        this.playerStatusBar.refreshStatusBar(this.pokemonPlayer.health)
+        this.iaStatusBar.refreshStatusBar(this.pokemonIa.health)
 
         this.drawAll()
         this.loopCounter++
 
-        if (this.loopCounter % 2 === 0 && this.pokemonPlayer.pp < 80){
+        if (this.loopCounter % 2 === 0 && this.pokemonPlayer.pp < 100){
             this.restorePP(this.pokemonPlayer)
         }
-        if (this.loopCounter % 5 === 0 && this.pokemonIa.pp < 80) {
+        if (this.loopCounter % 5 === 0 && this.pokemonIa.pp < 100) {
             this.restorePP(this.pokemonIa)
         }
 
@@ -256,8 +290,8 @@ const Game = {
         })
         this.pokemonIa.mts.forEach((elm, i) => {
            if(
-                this.pokemonPlayer.pokemonPosition.left + this.pokemonPlayer.pokemonSize.width >= elm.mtPosition.left &&
-                this.pokemonPlayer.pokemonPosition.left <= elm.mtPosition.left + elm.mtSize.width &&
+                this.pokemonPlayer.pokemonPosition.left + this.pokemonPlayer.pokemonSize.width - 20 >= elm.mtPosition.left &&
+                this.pokemonPlayer.pokemonPosition.left + 40 <= elm.mtPosition.left + elm.mtSize.width &&
                 this.pokemonPlayer.pokemonPosition.top + this.pokemonPlayer.pokemonSize.height >= elm.mtPosition.top &&
                 this.pokemonPlayer.pokemonPosition.top <= elm.mtPosition.top + elm.mtSize.height
             ){
@@ -275,10 +309,10 @@ const Game = {
             this.playerTeam.shift()
             if (this.playerTeam.length > 0) {
                 console.log(this.playerTeam[0])
-                this.pokemonPlayer = new Player(this.gameScreen, this.gameSize, 10, this.playerTeam[0].health, this.playerTeam[0].power, this.playerTeam[0].pp)
+                this.pokemonPlayer = new Player(this.gameScreen, this.gameSize, this.playerTeam[0].health, this.playerTeam[0].power, this.playerTeam[0].speed, this.playerTeam[0].pp, this.playerTeam[0].sprite)
             }
             else {
-                alert('hahahahaha eres peor que Ash en la temporada 1')
+                console.log("perdiste")
             }
         }
 
@@ -288,8 +322,7 @@ const Game = {
             this.iaTeam.shift()
             if(this.iaTeam.length > 0){
                 console.log(this.iaTeam[0])
-                this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, 1, this.iaTeam[0].health, this.iaTeam[0].power, this.iaTeam[0].pp)
-                console.log("Te has cargado un familiar del TEAM 1")
+                this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, this.iaTeam[0].health, this.iaTeam[0].power, this.iaTeam[0].speed, this.iaTeam[0].pp, this.iaTeam[0].sprite)
             }
             else {
                 this.pokemonIa.deleteMts()
@@ -297,8 +330,7 @@ const Game = {
                 this.iaTeam2.shift()
                 if (this.iaTeam2.length > 0) {
                     console.log(this.iaTeam2[0])
-                    this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, 3, this.iaTeam2[0].health, this.iaTeam2[0].power, this.iaTeam2[0].pp)
-                    console.log("Te has cargado un familiar del TEam 2")
+                    this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, this.iaTeam2[0].health, this.iaTeam2[0].power, this.iaTeam2[0].speed, this.iaTeam2[0].pp, this.iaTeam2[0].sprite)
                 }
                 else{
                     this.pokemonIa.deleteMts()
@@ -306,11 +338,10 @@ const Game = {
                     this.iaTeam3.shift()
                     if (this.iaTeam3.length > 0) {
                         console.log(this.iaTeam3[0])
-                        this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, 5, this.iaTeam3[0].health, this.iaTeam3[0].power, this.iaTeam3[0].pp)
-                        console.log("Te has cargado un familiar del teAM 3")
+                        this.pokemonIa = new Enemy(this.gameScreen, this.gameSize, this.iaTeam3[0].health, this.iaTeam3[0].power, this.iaTeam3[0].speed, this.iaTeam3[0].pp, this.iaTeam3[0].sprite)
                     }
                     else{
-                        alert("Has superado el ultimo modulo")
+                        console.log("ganaste")
                     }
                 }
             }
