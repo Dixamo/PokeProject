@@ -9,7 +9,37 @@
 </head>
 <body>
 
-    <figure id="game-screen"></figure>
+    <div id="start-screen">
+        <h1>¡Has llegado a La Liga Pokemon!</h1>
+        <div>
+            <button id="start-button">Comienza tu Aventura!</button>
+        </div>
+    </div>
+
+    <div id="final-winner-screen">
+        <audio id="winTheme" autoplay>
+            <source src="./audio/ElSeñorDeLaNoche.mp3" type="audio/mpeg">
+        </audio>
+        <h1>Módulo 1 superado!!!</h1>
+        <div></div>
+        <p>Has ganado, pero tus Pokemons se han ido de fiesta</p>
+    </div>
+
+    <div id="final-loser-screen">
+        <audio id="loseTheme" autoplay>
+            <source src="./audio/FailSound.mp3" type="audio/mpeg">
+        </audio>
+        <h1>Pa Septiembre Monstruo</h1>
+        <p>Nooooooo, no has superado el primer módulo</p>
+    </div>
+
+    <figure id="game-screen">
+        <audio id="gameTheme" autoplay>
+            <source src="./audio/PokemonThemeCumbia.mp3" type="audio/mpeg">
+        </audio>
+    </figure>
+
+   
     
     <script src="./src/statusBar.js"></script>
     <script src="./src/powerUp.js"></script>

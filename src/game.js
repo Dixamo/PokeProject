@@ -7,12 +7,16 @@ const Game = {
         height: window.innerHeight
     },
 
+    gameOver: false,
+
+    gameTheme: undefined,
+
     playerTeam: [
         {
             name: 'Pikachu',
             health: 100,
-            power: 20,
-            speed: 15,
+            power: 10,
+            speed: 18,
             pp: 100,
             sprite: '../images/pikachu.png'
         },
@@ -27,15 +31,15 @@ const Game = {
         {
             name: 'Sceptile',
             health: 100,
-            power: 20,
-            speed: 12,
+            power: 13,
+            speed: 14,
             pp: 100,
             sprite: '../images/sceptile.png'
         },
         {
             name: 'Blaziken',
             health: 100,
-            power: 20,
+            power: 16,
             speed: 12,
             pp: 100,
             sprite: '../images/blaziken.png'
@@ -43,8 +47,8 @@ const Game = {
         {
             name: 'Infernape',
             health: 100,
-            power: 20,
-            speed: 13,
+            power: 16,
+            speed: 16,
             pp: 100,
             sprite: '../images/infernape.png'
         }
@@ -56,23 +60,23 @@ const Game = {
         {
             name: 'Meowth',
             health: 100,
-            power: 50,
-            speed: 3,
+            power: 10,
+            speed: 7,
             pp: 100,
             sprite: '../images/meowth.png'
         },
         {
-            name: 'Alakazam',
+            name: 'Metagross',
             health: 100,
-            power: 50,
-            speed: 3,
+            power: 35,
+            speed: 4,
             pp: 100,
-            sprite: '../images/alakazam.png'      
+            sprite: '../images/metagross.png'      
         },
         {
             name: 'Garchomp',
             health: 100,
-            power: 50,
+            power: 35,
             speed: 7,
             pp: 100,
             sprite: '../images/garchomp.png'
@@ -83,7 +87,7 @@ const Game = {
         {
             name: 'Milotic',
             health: 100,
-            power: 50,
+            power: 40,
             speed: 5,
             pp: 100,
             sprite: '../images/milotic.png'
@@ -92,15 +96,15 @@ const Game = {
             name: 'Tyranitar',
             health: 100,
             power: 50,
-            speed: 2,
+            speed: 3,
             pp: 100,
             sprite: '../images/tyranitar.png'
         },
         {
             name: 'Rayquaza',
             health: 200,
-            power: 100,
-            speed: 8,
+            power: 70,
+            speed: 7,
             pp: 100,
             sprite: '../images/rayquaza.png'
         }
@@ -110,26 +114,26 @@ const Game = {
         {
             name: 'Mewtwo',
             health: 200,
-            power: 10,
-            speed: 8,
+            power: 80,
+            speed: 6,
             pp: 100,
             sprite: '../images/mewtwo.png'
         },
         {
             name: 'Dialga',
             health: 200,
-            power: 50,
+            power: 60,
             speed: 8,
             pp: 100,
             sprite: '../images/dialga.png'
         },
         {
             name: 'Arceus',
-            health: 200,
-            power: 100,
-            speed: 9,
+            health: 300,
+            power: 120,
+            speed: 8,
             pp: 100,
-            sprite: '../images/arceus-normal.png'
+            sprite: '../images/arceus.png'
         }
     ],
     
@@ -193,6 +197,8 @@ const Game = {
     },
 
     start(){
+        this.gameTheme = document.getElementById("gameTheme")
+        this.gameTheme.play()
         this.createElements()
         this.gameLoop()
     },
@@ -205,29 +211,44 @@ const Game = {
     },
 
     gameLoop() {
-        if (this.loopCounter > 5500) {
-            this.loopCounter = 0
-        }
-        else {
+        if (!this.gameOver) {
+            if (this.loopCounter > 5500) {
+                this.loopCounter = 0
+            }
+            this.playerStatusBar.refreshStatusBar(this.pokemonPlayer.health)
+            this.iaStatusBar.refreshStatusBar(this.pokemonIa.health)
+
+            this.drawAll()
             this.loopCounter++
-        }
-        this.playerStatusBar.refreshStatusBar(this.pokemonPlayer.health)
-        this.iaStatusBar.refreshStatusBar(this.pokemonIa.health)
 
-        this.drawAll()
-        this.loopCounter++
+            if (this.loopCounter % 2 === 0 && this.pokemonPlayer.pp < 100){
+                this.restorePP(this.pokemonPlayer)
+            }
+            if (this.loopCounter % 5 === 0 && this.pokemonIa.pp < 100) {
+                this.restorePP(this.pokemonIa)
+            }
 
-        if (this.loopCounter % 2 === 0 && this.pokemonPlayer.pp < 100){
-            this.restorePP(this.pokemonPlayer)
-        }
-        if (this.loopCounter % 5 === 0 && this.pokemonIa.pp < 100) {
-            this.restorePP(this.pokemonIa)
-        }
+            if (!this.powerUp && this.loopCounter % 40 === 0 && this.loopCounter > 1000 && this.loopCounter < 1100) {
+                this.powerUp = new PowerUp(this.gameScreen, this.gameSize)
+            }
 
-        if (!this.powerUp && this.loopCounter % 9 === 0 && this.loopCounter > 1000 && this.loopCounter < 1100) {
-            this.powerUp = new PowerUp(this.gameScreen, this.gameSize)
-        }
+            this.iaConfiguration()
 
+            this.isPowerUp()
+            
+            this.isCollision()
+            this.isOutOfCombat()
+            this.activatePowerUp()
+            window.requestAnimationFrame(() => this.gameLoop())
+        }
+    },
+
+    drawAll() {
+        this.pokemonPlayer.move(this.loopCounter)
+        this.pokemonIa.move(this.loopCounter)
+    },
+
+    iaConfiguration() {
         if (this.pokemonIa.pokemonPosition.top < this.pokemonPlayer.pokemonPosition.top - 15) {
             this.pokemonIa.goDown()
         }
@@ -235,10 +256,10 @@ const Game = {
             this.pokemonIa.goUp()
         }
 
-        if (this.pokemonIa.pokemonPosition.left < this.pokemonPlayer.pokemonPosition.left - 300) {
+        if (this.pokemonIa.pokemonPosition.left < this.pokemonPlayer.pokemonPosition.left - 200) {
             this.pokemonIa.goRight()
         }
-        if (this.pokemonIa.pokemonPosition.left > this.pokemonPlayer.pokemonPosition.left + 300) {
+        if (this.pokemonIa.pokemonPosition.left > this.pokemonPlayer.pokemonPosition.left + 200) {
             this.pokemonIa.goLeft()
         }
 
@@ -248,31 +269,6 @@ const Game = {
         if (this.loopCounter % 2 === 0) {
             this.pokemonIa.specialAttack()
         }
-
-        if (this.pokemonPlayer.drunk && this.powerUpCounter <= 300) {
-            this.powerUpCounter++
-        }
-        else if (this.pokemonPlayer.drunk && this.powerUpCounter >= 300) {
-            this.pokemonPlayer.isHangover()
-            this.powerUpCounter = 0
-        }
-        else if (this.pokemonPlayer.hangover && this.powerUpCounter <= 300) {
-            this.powerUpCounter++
-        }
-        else if (this.pokemonPlayer.hangover && this.powerUpCounter >= 300) {
-            this.pokemonPlayer.isNormalFromDrunk()
-            this.powerUpCounter = 0
-        }
-        
-        this.isCollision()
-        this.isOutOfCombat()
-        this.activatePowerUp()
-        window.requestAnimationFrame(() => this.gameLoop())
-    },
-
-    drawAll() {
-        this.pokemonPlayer.move()
-        this.pokemonIa.move()
     },
 
     isCollision() {
@@ -302,6 +298,23 @@ const Game = {
         })
     },
 
+    isPowerUp() {
+        if (this.pokemonPlayer.drunk && this.powerUpCounter <= 300) {
+            this.powerUpCounter++
+        }
+        else if (this.pokemonPlayer.drunk && this.powerUpCounter >= 300) {
+            this.pokemonPlayer.isHangover()
+            this.powerUpCounter = 0
+        }
+        else if (this.pokemonPlayer.hangover && this.powerUpCounter <= 300) {
+            this.powerUpCounter++
+        }
+        else if (this.pokemonPlayer.hangover && this.powerUpCounter >= 300) {
+            this.pokemonPlayer.isNormalFromDrunk()
+            this.powerUpCounter = 0
+        }
+    },
+
     isOutOfCombat() {
         if(this.pokemonPlayer.health <= 0) {
             this.pokemonPlayer.deleteMts()
@@ -313,6 +326,13 @@ const Game = {
             }
             else {
                 console.log("perdiste")
+                this.gameTheme.pause()
+                const loseTheme = document.querySelector("#loseTheme")
+                loseTheme.play()
+                const loserScreen = document.querySelector('#final-loser-screen')
+                this.gameScreen.style.display = 'none'
+                loserScreen.style.display = 'block'
+                this.gameOver = true
             }
         }
 
@@ -342,6 +362,13 @@ const Game = {
                     }
                     else{
                         console.log("ganaste")
+                        this.gameTheme.pause()
+                        const winTheme = document.querySelector("#winTheme")
+                        winTheme.play()
+                        const winnerScreen = document.querySelector('#final-winner-screen')
+                        this.gameScreen.style.display = 'none'
+                        winnerScreen.style.display = "block"
+                        this.gameOver = true
                     }
                 }
             }

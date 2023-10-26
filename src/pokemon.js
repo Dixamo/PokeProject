@@ -14,13 +14,20 @@ class Pokemon{
         this.sprite = sprite
         
         this.pokemonSize = {
-            height: 190,
-            width: 175
+            height: 150,
+            width: 150
         }
     
         this.pokemonPosition = {
             left: Math.floor(Math.random() * (this.gameSize.width - this.pokemonSize.width) + 0),
             top: Math.floor(Math.random() * (this.gameSize.height - this.pokemonSize.height) - 100)
+        }
+
+        this.pokemonSprite = { 
+            pokemonBackgroundPositionX: 0,
+            totalFrames: 6,
+            currentFrame: 1,
+            frameSpeed: 7
         }
 
         this.mts = []
@@ -39,7 +46,7 @@ class Pokemon{
         this.pokemonElement.style.top = `${this.pokemonPosition.top}px`
 
         this.pokemonElement.style.backgroundImage = `url(${this.sprite})`
-        this.pokemonElement.style.backgroundSize = `200px 200px`
+        this.pokemonElement.style.backgroundSize = `900px 150px`
         this.pokemonElement.style.transform = `scaleX(-1)`
 
         this.pokemonElement.style.overflow = "hidden"
@@ -87,6 +94,30 @@ class Pokemon{
         })
         this.mts = []
     }
+
+    move(loopCounter) {
+        this.animateSprite(loopCounter)
+        this.updatePosition()
+    }
+
+    animateSprite(loopCounter){
+
+        console.log(this.pokemonSprite.currentFrame)
+        if (loopCounter % this.pokemonSprite.frameSpeed === 0) {
+            this.pokemonSprite.currentFrame++
+        }
+        if (this.pokemonSprite.currentFrame >= this.pokemonSprite.totalFrames) {
+            this.pokemonSprite.currentFrame = 0
+        }
+
+        this.pokemonSprite.pokemonBackgroundPositionX = -this.pokemonSize.width * this.pokemonSprite.currentFrame
+        
+        this.updateSprite()
+    }
+
+    updateSprite(){
+        this.pokemonElement.style.backgroundPositionX = `${this.pokemonSprite.pokemonBackgroundPositionX}px`
+    }
 }
 
 
@@ -113,13 +144,14 @@ class Player extends Pokemon {
         this.hangover = false
     }
 
-    move(){
+    move(loopCounter){
         this.goUp()
         this.goDown()
         this.goLeft()
         this.goRight()
         this.normalAttack()
         this.specialAttack()
+        this.animateSprite(loopCounter)
         this.updatePosition()
         this.mts.forEach(mt => {
             mt.move()
@@ -213,11 +245,12 @@ class Enemy extends Pokemon {
         }
     }
 
-    move(){
+    move(loopCounter){
         this.goUp()
         this.goDown()
         this.goLeft()
         this.goRight()
+        this.animateSprite(loopCounter)
         this.updatePosition()
         this.mts.forEach(mt => {
             mt.move()
