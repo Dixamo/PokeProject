@@ -23,7 +23,7 @@ class PowerUp {
         this.powerUpElement.style.height = `${this.powerUpSize.height}px`
         this.powerUpElement.style.left = `${this.powerUpPosition.left}px`
         this.powerUpElement.style.top = `${this.powerUpPosition.top}px`
-        this.powerUpElement.style.backgroundImage = `url(../images/jagger-power-up.png)`
+        this.powerUpElement.style.backgroundImage = `url(images/jagger-power-up.png)`
         this.powerUpElement.style.backgroundSize = `125px 125px`
         //this.powerUpElement.style.zIndex = "-1"
 
