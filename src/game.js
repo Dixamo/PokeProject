@@ -18,7 +18,7 @@ const Game = {
             power: 10,
             speed: 18,
             pp: 100,
-            sprite: '../images/pikachu.png'
+            sprite: 'images/pikachu.png'
         },
         {
             name: 'Charizard',
@@ -26,7 +26,7 @@ const Game = {
             power: 20,
             speed: 10,
             pp: 100,
-            sprite: '../images/charizard.png'
+            sprite: 'images/charizard.png'
         },
         {
             name: 'Sceptile',
@@ -34,7 +34,7 @@ const Game = {
             power: 13,
             speed: 14,
             pp: 100,
-            sprite: '../images/sceptile.png'
+            sprite: 'images/sceptile.png'
         },
         {
             name: 'Blaziken',
@@ -42,7 +42,7 @@ const Game = {
             power: 16,
             speed: 12,
             pp: 100,
-            sprite: '../images/blaziken.png'
+            sprite: 'images/blaziken.png'
         },
         {
             name: 'Infernape',
@@ -50,7 +50,7 @@ const Game = {
             power: 16,
             speed: 16,
             pp: 100,
-            sprite: '../images/infernape.png'
+            sprite: 'images/infernape.png'
         }
     ],
 
@@ -63,7 +63,7 @@ const Game = {
             power: 10,
             speed: 7,
             pp: 100,
-            sprite: '../images/meowth.png'
+            sprite: 'images/meowth.png'
         },
         {
             name: 'Metagross',
@@ -71,7 +71,7 @@ const Game = {
             power: 35,
             speed: 4,
             pp: 100,
-            sprite: '../images/metagross.png'      
+            sprite: 'images/metagross.png'      
         },
         {
             name: 'Garchomp',
@@ -79,7 +79,7 @@ const Game = {
             power: 35,
             speed: 7,
             pp: 100,
-            sprite: '../images/garchomp.png'
+            sprite: 'images/garchomp.png'
         }
     ],
     
@@ -90,7 +90,7 @@ const Game = {
             power: 40,
             speed: 5,
             pp: 100,
-            sprite: '../images/milotic.png'
+            sprite: 'images/milotic.png'
         },
         {
             name: 'Tyranitar',
@@ -98,7 +98,7 @@ const Game = {
             power: 50,
             speed: 3,
             pp: 100,
-            sprite: '../images/tyranitar.png'
+            sprite: 'images/tyranitar.png'
         },
         {
             name: 'Rayquaza',
@@ -106,7 +106,7 @@ const Game = {
             power: 70,
             speed: 7,
             pp: 100,
-            sprite: '../images/rayquaza.png'
+            sprite: 'images/rayquaza.png'
         }
     ], 
             
@@ -117,7 +117,7 @@ const Game = {
             power: 80,
             speed: 6,
             pp: 100,
-            sprite: '../images/mewtwo.png'
+            sprite: 'images/mewtwo.png'
         },
         {
             name: 'Dialga',
@@ -125,7 +125,7 @@ const Game = {
             power: 60,
             speed: 8,
             pp: 100,
-            sprite: '../images/dialga.png'
+            sprite: 'images/dialga.png'
         },
         {
             name: 'Arceus',
@@ -133,7 +133,7 @@ const Game = {
             power: 120,
             speed: 8,
             pp: 100,
-            sprite: '../images/arceus.png'
+            sprite: 'images/arceus.png'
         }
     ],
     
