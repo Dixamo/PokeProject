@@ -101,8 +101,6 @@ class Pokemon{
     }
 
     animateSprite(loopCounter){
-
-        console.log(this.pokemonSprite.currentFrame)
         if (loopCounter % this.pokemonSprite.frameSpeed === 0) {
             this.pokemonSprite.currentFrame++
         }
